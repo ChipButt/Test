@@ -1,114 +1,46 @@
-(function(){
-  'use strict';
-  var DATA = window.PLANUF_DATA || { equipment: [], productionTemplates: [], crewRoles: [], defaults: {} };
-  var app = document.getElementById('app');
-  var state = {
-    projectName: 'Test',
-    productionType: 'mini-series',
-    episodes: 6,
-    episodesPerShootDay: 6,
-    editDaysPerEpisode: 1,
-    locationHirePerDay: DATA.defaults.locationHirePerDay || 250,
-    castCostPerEpisode: DATA.defaults.castCostPerEpisode || 20,
-    contingencyPercent: DATA.defaults.contingencyPercent || 10,
-    tab: 'setup',
-    crew: (DATA.crewRoles || []).map(function(r){ return Object.assign({}, r); }),
-    equipment: (DATA.equipment || []).map(function(e, i){ return { id: 'eq' + i, category: e.category, item: e.item, qty: e.qty, unit: e.unit, url: e.url, decision: e.owned ? 'owned' : 'buy' }; })
-  };
-
-  try {
-    var saved = JSON.parse(localStorage.getItem('planuf-budget-builder-safe'));
-    if (saved) state = Object.assign(state, saved);
-  } catch(e) {}
-
-  function save(){ localStorage.setItem('planuf-budget-builder-safe', JSON.stringify(state)); }
-  function num(v){ v = Number(v); return isFinite(v) ? v : 0; }
-  function cash(v){ return new Intl.NumberFormat('en-GB', { style:'currency', currency:'GBP', maximumFractionDigits:0 }).format(num(v)); }
-  function esc(v){ return String(v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]; }); }
-  function shootDays(){ return Math.max(1, Math.ceil(Math.max(1, num(state.episodes)) / Math.max(1, num(state.episodesPerShootDay)))); }
-  function editDays(){ return Math.max(0, Math.ceil(num(state.episodes) * num(state.editDaysPerEpisode))); }
-  function buyEquipmentTotal(){ return state.equipment.reduce(function(t, e){ return t + (e.decision === 'buy' ? num(e.qty) * num(e.unit) : 0); }, 0); }
-  function crewTotal(){
-    var sd = shootDays();
-    var ed = editDays();
-    return state.crew.reduce(function(t, r){
-      if (!r.enabled) return t;
-      var mult = r.phase === 'edit' ? ed : r.phase === 'episode' ? num(state.episodes) : sd;
-      return t + num(r.qty) * num(r.rate) * mult;
-    }, 0);
-  }
-  function totals(){
-    var crew = crewTotal();
-    var loc = shootDays() * num(state.locationHirePerDay);
-    var cast = num(state.episodes) * num(state.castCostPerEpisode);
-    var equip = buyEquipmentTotal();
-    var sub = crew + loc + cast;
-    var cont = Math.round((sub + equip) * (num(state.contingencyPercent) / 100));
-    return { crew: crew, loc: loc, cast: cast, equip: equip, sub: sub, cont: cont, total: sub + equip + cont };
-  }
-  function templateOptions(){
-    return DATA.productionTemplates.map(function(t){ return '<option value="' + t.id + '" ' + (state.productionType === t.id ? 'selected' : '') + '>' + esc(t.name) + '</option>'; }).join('');
-  }
-  function applyTemplate(id){
-    var t = DATA.productionTemplates.find(function(x){ return x.id === id; });
-    if (!t) return;
-    state.productionType = id;
-    state.episodes = t.episodes;
-    state.episodesPerShootDay = t.episodesPerShootDay;
-    state.editDaysPerEpisode = t.editDaysPerEpisode;
-    save();
-    render();
-  }
-  function tabs(){
-    return ['setup','crew','equipment','summary'].map(function(t, i){ return '<button class="tab ' + (state.tab === t ? 'active' : '') + '" data-tab="' + t + '">' + (i+1) + '. ' + t.charAt(0).toUpperCase() + t.slice(1) + '</button>'; }).join('');
-  }
-  function header(T){
-    return '<section class="hero"><div><p class="eyebrow">Planuf Productions</p><h1>Budget Builder</h1><p class="subhead">Automated planning estimate. Episode count now drives shoot days, edit days, crew labour, location hire and total spend.</p></div><aside class="total-card"><p class="total-label">Current required spend</p><p class="total-value">' + cash(T.total) + '</p><p class="total-note">' + state.episodes + ' episodes · ' + shootDays() + ' shoot days · ' + editDays() + ' edit days</p></aside></section><nav class="tabs">' + tabs() + '</nav>';
-  }
-  function setupView(){
-    return '<section class="grid"><div class="panel"><h2>Production setup</h2><p class="note">Example rule: 15 episodes at 6 episodes per shoot day becomes 3 shoot days automatically.</p><div class="form-grid">' +
-    field('Project name','projectName',state.projectName,'text') +
-    '<label>Production shape<select id="productionType">' + templateOptions() + '</select></label>' +
-    field('Episodes','episodes',state.episodes,'number') +
-    field('Episodes possible per shoot day','episodesPerShootDay',state.episodesPerShootDay,'number') +
-    readonly('Calculated shoot days', shootDays()) +
-    field('Edit days per episode','editDaysPerEpisode',state.editDaysPerEpisode,'number') +
-    readonly('Calculated edit days', editDays()) +
-    field('Location hire per shoot day','locationHirePerDay',state.locationHirePerDay,'number') +
-    field('Cast/contributor cost per episode','castCostPerEpisode',state.castCostPerEpisode,'number') +
-    field('Contingency %','contingencyPercent',state.contingencyPercent,'number') +
-    '</div><div class="actions"><button data-tab="crew">Continue to Crew</button><button class="secondary" id="resetBtn">Reset local draft</button></div></div>' +
-    '<aside class="panel"><h2>Automation check</h2><ul class="summary-list"><li><span>Episodes</span><strong>' + state.episodes + '</strong></li><li><span>Episodes per shoot day</span><strong>' + state.episodesPerShootDay + '</strong></li><li><span>Calculated shoot days</span><strong>' + shootDays() + '</strong></li><li><span>Calculated edit days</span><strong>' + editDays() + '</strong></li></ul></aside></section>';
-  }
-  function field(label, key, value, type){ return '<label>' + label + '<input data-field="' + key + '" type="' + type + '" value="' + esc(value) + '"></label>'; }
-  function readonly(label, value){ return '<label>' + label + '<input disabled value="' + esc(value) + '"></label>'; }
-  function crewView(){
-    var rows = state.crew.map(function(r, i){
-      var mult = r.phase === 'edit' ? editDays() : r.phase === 'episode' ? state.episodes : shootDays();
-      var total = r.enabled ? num(r.qty) * num(r.rate) * mult : 0;
-      return '<article class="equipment-card"><strong>' + esc(r.role) + '</strong><div class="mini">Multiplier ' + mult + ' · ' + cash(total) + '</div><label>Use<select data-crew="' + i + '" data-key="enabled"><option value="true" ' + (r.enabled?'selected':'') + '>Use</option><option value="false" ' + (!r.enabled?'selected':'') + '>Off</option></select></label><div class="card-controls"><label>Qty<input data-crew="' + i + '" data-key="qty" type="number" value="' + r.qty + '"></label><label>Rate £<input data-crew="' + i + '" data-key="rate" type="number" value="' + r.rate + '"></label></div><label>Charged by<select data-crew="' + i + '" data-key="phase"><option value="shoot" ' + (r.phase==='shoot'?'selected':'') + '>Shoot day</option><option value="edit" ' + (r.phase==='edit'?'selected':'') + '>Edit day</option><option value="episode" ' + (r.phase==='episode'?'selected':'') + '>Episode</option></select></label></article>';
-    }).join('');
-    return '<section class="panel"><h2>Crew and labour</h2><p class="note">Shoot roles multiply by shoot days. Edit roles multiply by edit days. Episode roles multiply by episode count.</p><div class="mobile-card-list" style="display:grid">' + rows + '</div><div class="actions"><button data-tab="equipment">Continue to Equipment</button><button class="secondary" data-tab="setup">Back to Setup</button></div></section>';
-  }
-  function equipmentView(){
-    var rows = state.equipment.map(function(e, i){ return '<article class="equipment-card"><strong>' + esc(e.item) + '</strong><div class="mini">' + esc(e.category) + ' · ' + cash(num(e.qty)*num(e.unit)) + '</div><div class="card-controls"><label>Qty<input data-eq="' + i + '" data-key="qty" type="number" value="' + e.qty + '"></label><label>Unit £<input data-eq="' + i + '" data-key="unit" type="number" value="' + e.unit + '"></label></div><label>Status<select data-eq="' + i + '" data-key="decision"><option value="owned" ' + (e.decision==='owned'?'selected':'') + '>Already owned</option><option value="buy" ' + (e.decision==='buy'?'selected':'') + '>Need to buy</option><option value="hire" ' + (e.decision==='hire'?'selected':'') + '>Hire / borrow</option><option value="company" ' + (e.decision==='company'?'selected':'') + '>Company decision</option></select></label><a href="' + e.url + '" target="_blank">Open buying link</a></article>'; }).join('');
-    return '<section class="panel"><h2>Equipment reconciliation</h2><p class="note">Only “Need to buy” equipment is added to the required spend.</p><div class="mobile-card-list" style="display:grid">' + rows + '</div><div class="actions"><button data-tab="summary">Continue to Summary</button><button class="secondary" data-tab="crew">Back to Crew</button></div></section>';
-  }
-  function summaryView(T){
-    return '<section class="grid"><div class="panel"><h2>Budget summary</h2><p><strong>' + esc(state.projectName) + '</strong></p><ul class="summary-list"><li><span>Episodes</span><strong>' + state.episodes + '</strong></li><li><span>Shoot days</span><strong>' + shootDays() + '</strong></li><li><span>Edit days</span><strong>' + editDays() + '</strong></li><li><span>Crew and labour</span><strong>' + cash(T.crew) + '</strong></li><li><span>Location hire</span><strong>' + cash(T.loc) + '</strong></li><li><span>Cast / contributors</span><strong>' + cash(T.cast) + '</strong></li><li><span>Equipment to buy now</span><strong>' + cash(T.equip) + '</strong></li><li><span>Contingency</span><strong>' + cash(T.cont) + '</strong></li><li><span>Total required spend</span><strong>' + cash(T.total) + '</strong></li></ul><div class="actions"><button data-tab="setup">Back to Setup</button></div></div></section>';
-  }
-  function render(){
-    var T = totals();
-    app.innerHTML = header(T) + (state.tab === 'crew' ? crewView() : state.tab === 'equipment' ? equipmentView() : state.tab === 'summary' ? summaryView(T) : setupView());
-    bind();
-  }
-  function bind(){
-    app.querySelectorAll('[data-tab]').forEach(function(b){ b.onclick = function(){ state.tab = b.dataset.tab; save(); render(); }; });
-    app.querySelectorAll('[data-field]').forEach(function(i){ i.onchange = function(){ state[i.dataset.field] = i.type === 'number' ? num(i.value) : i.value; save(); render(); }; });
-    app.querySelectorAll('[data-crew]').forEach(function(i){ i.onchange = function(){ var r = state.crew[num(i.dataset.crew)]; r[i.dataset.key] = i.dataset.key === 'enabled' ? i.value === 'true' : (i.dataset.key === 'qty' || i.dataset.key === 'rate') ? num(i.value) : i.value; save(); render(); }; });
-    app.querySelectorAll('[data-eq]').forEach(function(i){ i.onchange = function(){ var e = state.equipment[num(i.dataset.eq)]; e[i.dataset.key] = (i.dataset.key === 'qty' || i.dataset.key === 'unit') ? num(i.value) : i.value; save(); render(); }; });
-    var type = document.getElementById('productionType'); if (type) type.onchange = function(){ applyTemplate(type.value); };
-    var reset = document.getElementById('resetBtn'); if (reset) reset.onclick = function(){ localStorage.removeItem('planuf-budget-builder-safe'); location.reload(); };
-  }
-  render();
-})();
+const KEY='rotaManagerV2';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id=p=>p+Math.random().toString(36).slice(2,8);
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=d=>new Date(d).toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
+const monday=d=>{d=new Date(d);let n=(d.getDay()+6)%7;d.setHours(0,0,0,0);d.setDate(d.getDate()-n);return d};
+const plus=(d,n)=>{d=new Date(d);d.setDate(d.getDate()+n);return d};
+const mins=t=>{let [h,m]=t.split(':').map(Number);return h*60+m};
+const hrs=m=>Math.round(m/60*100)/100;
+const now=()=>{let d=new Date();d.setSeconds(0,0);return d.toISOString()};
+const seed={currentUserId:'u_chip',sections:['Kitchen','FOH','Office','WFH','Housekeeping','KP'],users:[
+{id:'u_vikki',name:'Vikki Fox',nickname:'Vikki',email:'',age:'',wage:0,jobArea:'Office',pronouns:'',role:'admin'},
+{id:'u_chip',name:'Chip Butt',nickname:'Chip',email:'jameschipbutt@hotmail.com',age:'',wage:0,jobArea:'Office',pronouns:'',role:'admin'},
+{id:'u_rhiannon',name:'Rhiannon Green',nickname:'Rhiannon',email:'',age:'',wage:0,jobArea:'Office',pronouns:'',role:'admin'},
+{id:'u_sam',name:'Sam Taylor',nickname:'Sam',email:'sam@example.com',age:25,wage:12.5,jobArea:'FOH',pronouns:'she/her',role:'staff'},
+{id:'u_jordan',name:'Jordan Lee',nickname:'Jords',email:'jordan@example.com',age:28,wage:13,jobArea:'Kitchen',pronouns:'he/him',role:'staff'}],shifts:[],logs:{}};
+let state=load(),week=monday(new Date());
+function load(){let raw=localStorage.getItem(KEY);if(!raw){let s=structuredClone(seed);s.shifts=[{id:id('s'),userId:'u_sam',section:'FOH',date:today(),start:'09:00',end:'17:30',notes:'Cover front desk and guest welcome.'},{id:id('s'),userId:'u_jordan',section:'Kitchen',date:today(),start:'10:15',end:'18:45',notes:'Prep list must be checked before lunch.'}];localStorage.setItem(KEY,JSON.stringify(s));return s}let s=JSON.parse(raw);seed.users.slice(0,3).forEach(m=>{let u=s.users.find(x=>x.name===m.name||x.id===m.id);if(u)u.role='admin';else s.users.unshift(m)});return s}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function user(){return state.users.find(u=>u.id===state.currentUserId)||state.users[0]}
+function admin(){return user()?.role==='admin'}
+function log(sid){return state.logs[sid]||{in:null,out:null,breaks:[]}}
+function setlog(sid,l){state.logs[sid]=l;save()}
+function sched(s){let m=mins(s.end)-mins(s.start);return m<0?m+1440:m}
+function breakM(s,paid){return log(s.id).breaks.filter(b=>b.end&&(paid==null||b.paid===paid)).reduce((t,b)=>t+Math.max(0,Math.round((new Date(b.end)-new Date(b.start))/60000)),0)}
+function payable(s){let l=log(s.id);if(!l.in||!l.out)return null;let total=Math.max(0,Math.round((new Date(l.out)-new Date(l.in))/60000));return Math.max(0,total-breakM(s,false))}
+function render(){renderSelects();renderRole();renderRota();renderClock();renderAdmin();renderTimes()}
+function renderSelects(){let opts=state.users.map(u=>`<option value="${u.id}">${esc(u.nickname)} (${u.role})</option>`).join('');$('currentUserSelect').innerHTML=opts;$('currentUserSelect').value=state.currentUserId;$('shiftUser').innerHTML=state.users.map(u=>`<option value="${u.id}">${esc(u.nickname)} — ${esc(u.name)}</option>`).join('');$('shiftSection').innerHTML=state.sections.map(s=>`<option>${esc(s)}</option>`).join('');$('userJobArea').innerHTML=$('shiftSection').innerHTML}
+function renderRole(){document.querySelectorAll('.adminOnly').forEach(e=>e.style.display=admin()?'':'none')}
+function renderRota(){let days=[0,1,2,3,4,5,6].map(n=>plus(week,n));$('dateRangeLabel').textContent=`${days[0].toLocaleDateString('en-GB')} – ${days[6].toLocaleDateString('en-GB')}`;let mine=$('mineOnly').checked;let h='<div class="gridCell gridHead">Area</div>'+days.map(d=>`<div class="gridCell gridHead">${fmt(d)}</div>`).join('');state.sections.forEach(sec=>{h+=`<div class="gridCell sectionHead">${esc(sec)}</div>`;days.forEach(d=>{let ds=d.toISOString().slice(0,10),ss=state.shifts.filter(s=>s.section===sec&&s.date===ds&&(!mine||s.userId===state.currentUserId)).sort((a,b)=>a.start.localeCompare(b.start));h+=`<div class="gridCell">${ss.map(card).join('')||'<span class="muted">No shifts</span>'}</div>`})});$('rotaGrid').innerHTML=h}
+function card(s){let u=state.users.find(u=>u.id===s.userId)||{};return `<div class="shiftCard ${s.userId===state.currentUserId?'mine':''}"><div class="shiftName">${esc(u.nickname||'Unknown')}</div><div><strong>${s.start}–${s.end}</strong></div><div class="shiftMeta">${esc(s.section)} · ${hrs(sched(s))} hrs scheduled</div>${s.notes?`<div class="shiftNote">${esc(s.notes)}</div>`:''}${admin()?`<div class="breakControls"><button class="small secondary" onclick="editShift('${s.id}')">Edit</button><button class="small danger" onclick="delShift('${s.id}')">Delete</button></div>`:''}</div>`}
+function renderClock(){let ss=state.shifts.filter(s=>s.userId===state.currentUserId&&s.date===today()).sort((a,b)=>a.start.localeCompare(b.start));$('todayShiftList').innerHTML=ss.length?ss.map(s=>{let l=log(s.id),ab=l.breaks.find(b=>!b.end),p=payable(s);return `<div class="workCard"><div class="shiftName">${esc(s.section)}</div><div class="shiftMeta">Today · ${s.start}–${s.end}</div><p>${esc(s.notes||'No shift notes.')}</p><span class="statusBadge ${l.in&&!l.out?'live':''}">${l.in?(l.out?'Clocked out':'Clocked in'):'Ready to clock in'}</span><div class="shiftMeta">Paid breaks: ${breakM(s,true)} min · Unpaid breaks: ${breakM(s,false)} min · Payable: ${p==null?'-':hrs(p)+' hrs'}</div><div class="breakControls"><button onclick="clockIn('${s.id}')" ${l.in?'disabled':''}>Clock in</button><button onclick="clockOut('${s.id}')" ${!l.in||l.out||ab?'disabled':''}>Clock out</button><button class="secondary" onclick="startBreak('${s.id}',false)" ${!l.in||l.out||ab?'disabled':''}>Unpaid break</button><button class="secondary" onclick="startBreak('${s.id}',true)" ${!l.in||l.out||ab?'disabled':''}>Paid break</button><button class="secondary" onclick="stopBreak('${s.id}')" ${!ab?'disabled':''}>End break</button></div></div>`}).join(''):'<p class="muted">No shift assigned for today.</p>'}
+function renderAdmin(){$('sectionList').innerHTML=state.sections.map(s=>`<span class="pill">${esc(s)} <button class="small danger" onclick="removeSection('${esc(s)}')">Remove</button></span>`).join('');$('userList').innerHTML=`<table><tr><th>Nickname</th><th>Name</th><th>Area</th><th>Wage</th><th>Email</th><th>Role</th><th></th></tr>${state.users.map(u=>`<tr><td>${esc(u.nickname)}</td><td>${esc(u.name)}<br><span class="muted">${esc(u.pronouns)}</span></td><td>${esc(u.jobArea)}</td><td>£${Number(u.wage||0).toFixed(2)}</td><td>${esc(u.email)}</td><td>${u.role}</td><td><button class="small secondary" onclick="editUser('${u.id}')">Edit</button></td></tr>`).join('')}</table>`}
+function renderTimes(){$('timesheetTable').innerHTML=`<table><tr><th>Date</th><th>User</th><th>Area</th><th>Shift</th><th>Scheduled</th><th>Payable</th><th>Unpaid break</th><th>Est pay</th></tr>${state.shifts.map(s=>{let u=state.users.find(u=>u.id===s.userId)||{},p=payable(s),pay=p==null?null:hrs(p)*Number(u.wage||0);return `<tr><td>${s.date}</td><td>${esc(u.nickname)}</td><td>${esc(s.section)}</td><td>${s.start}-${s.end}</td><td>${hrs(sched(s))}</td><td>${p==null?'-':hrs(p)}</td><td>${breakM(s,false)} min</td><td>${pay==null?'-':'£'+pay.toFixed(2)}</td></tr>`}).join('')}</table>`}
+function clearShift(){$('shiftForm').reset();$('shiftId').value='';$('shiftDate').value=today()}
+function clearUser(){$('userForm').reset();$('userId').value=''}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.view).classList.add('active')});
+$('currentUserSelect').onchange=e=>{state.currentUserId=e.target.value;save();render()};$('prevWeek').onclick=()=>{week=plus(week,-7);renderRota()};$('nextWeek').onclick=()=>{week=plus(week,7);renderRota()};$('todayWeek').onclick=()=>{week=monday(new Date());renderRota()};$('mineOnly').onchange=renderRota;
+$('notificationBtn').onclick=async()=>{if(!('Notification'in window))return alert('Notifications not supported here.');alert(await Notification.requestPermission()==='granted'?'Notifications enabled.':'Notifications not enabled.')};
+$('shiftForm').onsubmit=e=>{e.preventDefault();let sid=$('shiftId').value||id('s'),old=state.shifts.find(s=>s.id===sid),s={id:sid,userId:$('shiftUser').value,section:$('shiftSection').value,date:$('shiftDate').value,start:$('shiftStart').value,end:$('shiftEnd').value,notes:$('shiftNotes').value};old?Object.assign(old,s):state.shifts.push(s);save();if(Notification?.permission==='granted'&&s.userId===state.currentUserId)new Notification(old?'Shift updated':'New shift added',{body:`${s.date} ${s.start}-${s.end}`});clearShift();render()};$('clearShiftForm').onclick=clearShift;
+window.editShift=sid=>{let s=state.shifts.find(s=>s.id===sid);if(!s)return;$('shiftId').value=s.id;$('shiftUser').value=s.userId;$('shiftSection').value=s.section;$('shiftDate').value=s.date;$('shiftStart').value=s.start;$('shiftEnd').value=s.end;$('shiftNotes').value=s.notes||'';document.querySelector('[data-view="adminView"]').click()};window.delShift=sid=>{if(confirm('Delete this shift?')){state.shifts=state.shifts.filter(s=>s.id!==sid);delete state.logs[sid];save();render()}};
+$('sectionForm').onsubmit=e=>{e.preventDefault();let n=$('newSectionName').value.trim();if(n&&!state.sections.includes(n))state.sections.push(n);$('newSectionName').value='';save();render()};window.removeSection=s=>{if(state.shifts.some(x=>x.section===s))return alert('Move or delete shifts in this section first.');state.sections=state.sections.filter(x=>x!==s);save();render()};
+$('userForm').onsubmit=e=>{e.preventDefault();let uid=$('userId').value||id('u'),u={id:uid,name:$('userName').value,nickname:$('userNickname').value,email:$('userEmail').value,age:$('userAge').value,wage:$('userWage').value,jobArea:$('userJobArea').value,pronouns:$('userPronouns').value,role:$('userRole').value},old=state.users.find(x=>x.id===uid);old?Object.assign(old,u):state.users.push(u);save();clearUser();render()};$('clearUserForm').onclick=clearUser;window.editUser=uid=>{let u=state.users.find(u=>u.id===uid);if(!u)return;$('userId').value=u.id;$('userName').value=u.name;$('userNickname').value=u.nickname;$('userEmail').value=u.email;$('userAge').value=u.age;$('userWage').value=u.wage;$('userJobArea').value=u.jobArea;$('userPronouns').value=u.pronouns;$('userRole').value=u.role};
+window.clockIn=sid=>{let l=log(sid);l.in=now();l.out=null;setlog(sid,l);render()};window.clockOut=sid=>{let l=log(sid);if(l.breaks.some(b=>!b.end))return alert('End the active break first.');l.out=now();setlog(sid,l);render()};window.startBreak=(sid,paid)=>{let l=log(sid);l.breaks.push({start:now(),end:null,paid});setlog(sid,l);render()};window.stopBreak=sid=>{let l=log(sid),b=l.breaks.find(b=>!b.end);if(b)b.end=now();setlog(sid,l);render()};
+clearShift();render();

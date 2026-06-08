@@ -14,15 +14,21 @@ window.PLANUF_DATA = {
     { category: 'Cables', item: 'Long HDMI cables', qty: 3, unit: 20, url: 'https://www.amazon.co.uk/s?k=long+hdmi+cable', owned: false }
   ],
   productionTemplates: [
-    { id: 'one-shot', name: 'One-shot / single episode', episodes: 1, shootDays: 1, editDays: 1, description: 'A single finished piece of content.' },
-    { id: 'mini-series', name: 'Fixed mini-series / arc', episodes: 6, shootDays: 2, editDays: 6, description: 'A planned run with a fixed episode count.' },
-    { id: 'ongoing', name: 'Ongoing recurring series', episodes: 10, shootDays: 3, editDays: 10, description: 'A repeatable format with open-ended future episodes.' }
+    { id: 'one-shot', name: 'One-shot / single episode', episodes: 1, episodesPerShootDay: 3, editDaysPerEpisode: 1, description: 'A single finished piece of content.' },
+    { id: 'mini-series', name: 'Fixed mini-series / arc', episodes: 6, episodesPerShootDay: 6, editDaysPerEpisode: 1, description: 'A planned run with a fixed episode count. Shoot days are calculated from episode count.' },
+    { id: 'ongoing', name: 'Ongoing recurring series', episodes: 10, episodesPerShootDay: 6, editDaysPerEpisode: 1, description: 'A repeatable format with open-ended future episodes.' }
+  ],
+  crewRoles: [
+    { id: 'director-producer', role: 'Director / producer', qty: 1, rate: 300, phase: 'shoot', enabled: true },
+    { id: 'camera-operator', role: 'Camera operator / vision mixer', qty: 1, rate: 300, phase: 'shoot', enabled: true },
+    { id: 'sound-recordist', role: 'Sound recordist / audio tech', qty: 1, rate: 300, phase: 'shoot', enabled: false },
+    { id: 'production-assistant', role: 'Production assistant / runner', qty: 1, rate: 120, phase: 'shoot', enabled: false },
+    { id: 'editor', role: 'Editor', qty: 1, rate: 160, phase: 'edit', enabled: true },
+    { id: 'thumbnail-graphics', role: 'Thumbnail / graphics support', qty: 1, rate: 80, phase: 'episode', enabled: false }
   ],
   defaults: {
     locationHirePerDay: 250,
-    crewDayRate: 300,
     castCostPerEpisode: 20,
-    editCostPerDay: 160,
     contingencyPercent: 10
   }
 };

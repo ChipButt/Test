@@ -1,0 +1,27 @@
+/* Final UI overrides loaded last */
+.tabs{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:6px !important;}
+.tabs .tab{font-size:14px !important;padding:10px 4px !important;}
+.scheduleToolbarFinal,.toolbar{display:grid !important;grid-template-columns:44px minmax(0,1fr) 44px !important;gap:8px !important;align-items:center !important;width:100% !important;box-sizing:border-box !important;margin:0 0 10px !important;overflow:hidden !important;}
+.scheduleToolbarFinal button,.toolbar button{width:44px !important;min-width:44px !important;max-width:44px !important;padding:8px 0 !important;text-align:center !important;border-radius:14px !important;}
+.scheduleToolbarFinal strong,.toolbar strong{text-align:center !important;font-size:13px !important;line-height:1.15 !important;white-space:normal !important;overflow:hidden !important;}
+.sectionBandTitle{padding:4px 8px !important;font-size:11px !important;line-height:1.1 !important;text-align:center !important;letter-spacing:.1px !important;}
+.bandDayHead strong{font-size:11px !important;}
+.bandDayHead span{font-size:9px !important;}
+.timesheetControls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;}
+.timesheetControls label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-weight:800;}
+.timesheetControls select,.timesheetControls input{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;padding:10px;font-size:16px;}
+.timesheetUserBlock{margin:16px 0;padding:12px;border:1px solid var(--line);border-radius:18px;background:#fffdf8;}
+.timesheetUserBlock h3{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 0 10px;font-size:18px;}
+.timesheetUserBlock h3 span{font-size:12px;color:#7f621f;white-space:nowrap;}
+@media(max-width:760px){
+  .tabs{grid-template-columns:repeat(4,minmax(0,1fr)) !important;}
+  .tabs .tab{font-size:12px !important;padding:9px 2px !important;}
+  .scheduleToolbarFinal,.toolbar{grid-template-columns:38px minmax(0,1fr) 38px !important;gap:6px !important;}
+  .scheduleToolbarFinal button,.toolbar button{width:38px !important;min-width:38px !important;max-width:38px !important;font-size:16px !important;}
+  .scheduleToolbarFinal strong,.toolbar strong{font-size:11px !important;}
+  .sectionBandTitle{padding:3px 6px !important;font-size:9px !important;}
+  .timesheetControls{grid-template-columns:1fr;}
+  .timesheetUserBlock{padding:10px;}
+  .timesheetUserBlock h3{font-size:16px;display:block;}
+  .timesheetUserBlock h3 span{display:block;margin-top:3px;}
+}

@@ -17,92 +17,19 @@
       </div>
       <div class="topActions">
         <select id="currentUserSelect" title="Current user"></select>
-        <button id="notificationBtn" class="secondary">Enable notifications</button>
       </div>
     </header>
 
     <nav class="tabs">
-      <button class="tab active" data-view="rotaView">My Rota</button>
-      <button class="tab" data-view="clockView">Clock In</button>
-      <button class="tab adminOnly" data-view="adminView">Admin</button>
-      <button class="tab adminOnly" data-view="timesheetView">Timesheets</button>
+      <button class="tab active">Schedule</button>
+      <button class="tab">Clock In</button>
+      <button class="tab">People</button>
+      <button class="tab">Admin</button>
     </nav>
 
     <main>
       <section id="rotaView" class="view active">
-        <div class="toolbar">
-          <button id="prevWeek" class="secondary">Previous week</button>
-          <button id="todayWeek" class="secondary">This week</button>
-          <button id="nextWeek" class="secondary">Next week</button>
-          <label class="inlineToggle"><input type="checkbox" id="mineOnly"> Show my shifts only</label>
-        </div>
         <div id="rotaGrid" class="rotaGrid"></div>
-      </section>
-
-      <section id="clockView" class="view">
-        <div class="panel">
-          <h2>Today’s shift controls</h2>
-          <p class="muted">Clock times are recorded to the minute. Breaks can be paid or unpaid and are used in payable-hour calculations.</p>
-          <div id="todayShiftList" class="cardList"></div>
-        </div>
-      </section>
-
-      <section id="adminView" class="view">
-        <div class="adminLayout">
-          <div class="panel">
-            <h2>Add / edit shift</h2>
-            <form id="shiftForm" class="formGrid">
-              <input type="hidden" id="shiftId" />
-              <label>Staff member<select id="shiftUser"></select></label>
-              <label>Section<select id="shiftSection"></select></label>
-              <label>Date<input type="date" id="shiftDate" required /></label>
-              <label>Start time<input type="time" id="shiftStart" step="60" required /></label>
-              <label>End time<input type="time" id="shiftEnd" step="60" required /></label>
-              <label class="full">Shift notes<textarea id="shiftNotes" placeholder="Visible on the main rota"></textarea></label>
-              <div class="full formActions">
-                <button type="submit">Save shift</button>
-                <button type="button" id="clearShiftForm" class="secondary">Clear</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="panel">
-            <h2>Sections</h2>
-            <form id="sectionForm" class="rowForm">
-              <input id="newSectionName" placeholder="Kitchen, FOH, Office..." />
-              <button type="submit">Add</button>
-            </form>
-            <div id="sectionList" class="pillList"></div>
-          </div>
-
-          <div class="panel wide">
-            <h2>Users</h2>
-            <form id="userForm" class="formGrid">
-              <input type="hidden" id="userId" />
-              <label>Name<input id="userName" required /></label>
-              <label>Nickname on rota<input id="userNickname" required /></label>
-              <label>Email<input id="userEmail" type="email" /></label>
-              <label>Age<input id="userAge" type="number" min="13" max="100" /></label>
-              <label>Hourly wage (£)<input id="userWage" type="number" min="0" step="0.01" /></label>
-              <label>Job area<select id="userJobArea"></select></label>
-              <label>Pronouns<input id="userPronouns" placeholder="they/them, she/her, he/him" /></label>
-              <label>Role<select id="userRole"><option value="staff">Staff</option><option value="admin">Admin</option></select></label>
-              <div class="full formActions">
-                <button type="submit">Save user</button>
-                <button type="button" id="clearUserForm" class="secondary">Clear</button>
-              </div>
-            </form>
-            <div id="userList" class="tableWrap"></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="timesheetView" class="view">
-        <div class="panel">
-          <h2>Timesheets</h2>
-          <p class="muted">Actual clocked time minus unpaid breaks. Paid breaks remain payable.</p>
-          <div id="timesheetTable" class="tableWrap"></div>
-        </div>
       </section>
     </main>
   </div>
@@ -122,5 +49,6 @@
   <script src="final-corrections-patch.js"></script>
   <script src="final-top-nav-patch.js"></script>
   <script src="final-admin-timesheets-report.js"></script>
+  <script src="final-render-on-load.js"></script>
 </body>
 </html>

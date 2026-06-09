@@ -49,3 +49,14 @@
   };
   try{saveProfileEdit=window.saveProfileEdit}catch(e){}
 })();
+
+// Minute-boundary refresh for Home clock/countdown.
+(function(){
+  function delay(){var n=new Date();return 60000-(n.getSeconds()*1000+n.getMilliseconds())+50}
+  function tick(){
+    if((state.view==='home'||state.view==='clock')&&typeof renderHome==='function')renderHome();
+    window.__homeMinuteRefresh=setTimeout(tick,delay());
+  }
+  clearTimeout(window.__homeMinuteRefresh);
+  window.__homeMinuteRefresh=setTimeout(tick,delay());
+})();

@@ -6,10 +6,14 @@
 .homeShiftCard{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;background:#fffdf8;border:1px solid var(--line);border-radius:18px;padding:12px;}
 .homeShiftCard h3{font-size:24px;margin:4px 0;}
 .homeShiftCard p{margin:3px 0;}
-.homeShiftActions{display:grid;gap:8px;}
-.startShiftBtn{background:#2fbf5b !important;color:#111 !important;border:0 !important;font-weight:950 !important;}
-.endShiftBtn{background:#d93b32 !important;color:#111 !important;border:0 !important;font-weight:950 !important;}
-.breakUnpaidBtn,.breakPaidBtn,.breakEndBtn{background:#111 !important;color:var(--accent) !important;font-weight:900 !important;}
+.homeShiftActions{display:grid;gap:8px;width:100%;}
+.startShiftBtn{width:100% !important;min-height:52px !important;border-radius:18px !important;background:#2fbf5b !important;color:#111 !important;border:0 !important;font-weight:950 !important;font-size:18px !important;text-align:center !important;display:block !important;}
+.unscheduledHomeBox{display:grid !important;gap:10px !important;width:100% !important;box-sizing:border-box !important;}
+.unscheduledHomeBox .unscheduledStartBtn{width:100% !important;min-height:56px !important;margin-top:6px !important;font-size:18px !important;text-align:center !important;justify-self:stretch !important;align-self:stretch !important;}
+.endShiftBtn{width:100% !important;min-height:52px !important;border-radius:18px !important;background:#d93b32 !important;color:#111 !important;border:0 !important;font-weight:950 !important;font-size:18px !important;text-align:center !important;display:block !important;}
+.breakUnpaidBtn,.breakPaidBtn,.breakEndBtn{width:100% !important;min-height:46px !important;border-radius:16px !important;background:#111 !important;color:var(--accent) !important;font-weight:900 !important;text-align:center !important;display:block !important;}
+.compactShift.onShift{background:#2fbf5b !important;color:#111 !important;border-left-color:#111 !important;}
+.compactShift.onShift small{color:#111 !important;font-weight:900 !important;}
 .adminBackButton{width:100%;border-radius:16px !important;margin-bottom:14px !important;text-align:left !important;padding:12px 14px !important;background:#111 !important;color:var(--accent) !important;font-size:18px !important;font-weight:900 !important;}
 .adminHomePanel{width:100% !important;box-sizing:border-box !important;}
 .adminSectionContent{margin-top:0 !important;}
@@ -30,6 +34,8 @@
   .tabs .tab{font-size:12px !important;padding:9px 1px !important;}
   .homeShiftCard{padding:10px;border-radius:16px;}
   .homeShiftCard h3{font-size:20px;}
+  .startShiftBtn,.endShiftBtn{min-height:50px !important;font-size:17px !important;}
+  .unscheduledHomeBox .unscheduledStartBtn{min-height:54px !important;font-size:17px !important;}
   .scheduleToolbarFinal,.toolbar{grid-template-columns:38px minmax(0,1fr) 38px !important;gap:6px !important;}
   .scheduleToolbarFinal button,.toolbar button{width:38px !important;min-width:38px !important;max-width:38px !important;font-size:16px !important;}
   .scheduleToolbarFinal strong,.toolbar strong{font-size:11px !important;}

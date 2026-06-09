@@ -1,17 +1,19 @@
 /* Schedule/admin overrides */
 .adminTabs{
-  display:flex !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:4px !important;
+  overflow:visible !important;
   flex-wrap:nowrap !important;
-  overflow-x:auto !important;
-  gap:6px !important;
-  grid-template-columns:none !important;
   scrollbar-width:none;
 }
 .adminTabs::-webkit-scrollbar{display:none;}
 .adminTab{
-  flex:0 0 auto !important;
+  min-width:0 !important;
   white-space:nowrap !important;
-  padding:10px 12px !important;
+  padding:8px 5px !important;
+  font-size:12px !important;
+  text-align:center !important;
 }
 .compactDayCell{
   gap:2px !important;
@@ -113,9 +115,32 @@
   padding:10px;
 }
 .emptyCell{font-size:8px;}
+.breakSummary{font-size:13px;margin-top:8px;}
+.profileCostCard{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px;
+  align-items:center;
+  margin:12px 0;
+  padding:12px;
+  background:#111;
+  color:var(--accent);
+  border-radius:16px;
+}
+.profileCostCard small{grid-column:1/-1;color:#f3e6c7;}
+.costReportPanel{margin-top:14px;}
+.costRange{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.costRange label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-weight:800;}
+.costRange input{border:1px solid var(--line);border-radius:14px;padding:10px;font-size:16px;}
+.costUserList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0;max-height:260px;overflow:auto;}
+.costUserList .checkLabel{background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:8px;font-size:13px;}
+.overContractUser{outline:3px solid #b83737 !important;background:#fff0ef !important;}
 @media(max-width:760px){
+  .adminTabs{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:3px !important;}
+  .adminTab{font-size:10px !important;padding:7px 2px !important;}
   .scheduleActions{grid-template-columns:repeat(2,minmax(0,1fr));}
   .templateLoadRow{grid-template-columns:1fr;}
   .compactShift{font-size:7px !important;padding:2px 3px !important;}
   .compactShift small{font-size:6px !important;max-height:12px;}
+  .costRange,.costUserList{grid-template-columns:1fr;}
 }

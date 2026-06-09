@@ -1,6 +1,18 @@
 // Adds Unassigned as a built-in shift assignment option without creating a user profile.
 (function(){
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function ensureExtraSections(){
+    const extras=['Social Media Work','Meetings'];
+    state.sections=state.sections||[];
+    let changed=false;
+    extras.forEach(name=>{
+      if(!state.sections.some(existing=>String(existing).trim().toLowerCase()===name.toLowerCase())){
+        state.sections.push(name);
+        changed=true;
+      }
+    });
+    if(changed && typeof save==='function') save();
+  }
   function userOptions(selected){
     return `<option value="unassigned" ${selected==='unassigned'?'selected':''}>Unassigned</option>` +
       (state.users||[]).map(u=>`<option value="${u.id}" ${u.id===selected?'selected':''}>${esc(u.name)}</option>`).join('');
@@ -32,6 +44,7 @@
 
   const oldDrawAdmin = window.drawAdmin || drawAdmin;
   window.drawAdmin = function(){
+    ensureExtraSections();
     oldDrawAdmin();
     patchVisibleShiftSelects();
   };
@@ -57,10 +70,12 @@
 
   const oldRenderRota = window.renderRota || renderRota;
   window.renderRota = function(){
+    ensureExtraSections();
     oldRenderRota();
     document.querySelectorAll('.compactShift.unassigned, .shiftCard.unassigned').forEach(card=>card.title='This shift has not been assigned to a team member yet.');
   };
   if(typeof renderRota !== 'undefined') renderRota = window.renderRota;
 
+  ensureExtraSections();
   patchVisibleShiftSelects();
 })();

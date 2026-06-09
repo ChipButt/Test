@@ -1,0 +1,121 @@
+/* Schedule/admin overrides */
+.adminTabs{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  overflow-x:auto !important;
+  gap:6px !important;
+  grid-template-columns:none !important;
+  scrollbar-width:none;
+}
+.adminTabs::-webkit-scrollbar{display:none;}
+.adminTab{
+  flex:0 0 auto !important;
+  white-space:nowrap !important;
+  padding:10px 12px !important;
+}
+.compactDayCell{
+  gap:2px !important;
+}
+.compactShift{
+  display:grid !important;
+  grid-template-columns:1fr auto !important;
+  column-gap:3px !important;
+  row-gap:1px !important;
+  align-items:center !important;
+  padding:3px 4px !important;
+  margin-bottom:2px !important;
+  border-radius:7px !important;
+  border-left:3px solid var(--accent) !important;
+  box-shadow:none !important;
+  font-size:8px !important;
+  line-height:1.05 !important;
+  min-height:0 !important;
+}
+.compactShift .compactName{
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.compactShift .compactTime{
+  font-weight:900;
+  white-space:nowrap;
+}
+.compactShift small{
+  grid-column:1/-1;
+  font-size:7px !important;
+  line-height:1.05 !important;
+  max-height:15px;
+  overflow:hidden;
+}
+.compactShift.planned{
+  background:#d9d9d9 !important;
+  color:#111 !important;
+  border-left-color:#8f8f8f !important;
+}
+.compactShift.published{
+  background:var(--accent) !important;
+  color:#111 !important;
+  border-left-color:#111 !important;
+}
+.compactShift.unassigned{
+  background:#eee !important;
+  color:#7a1e1e !important;
+  border-left-color:#9f2f24 !important;
+}
+.scheduleAdminTools{
+  margin-top:14px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px;
+}
+.scheduleAdminTools h2{margin:0 0 8px;}
+.scheduleActions{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.scheduleActions button{
+  padding:10px 8px;
+  font-size:13px;
+}
+.templateLoadRow{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:end;
+}
+.templateLoadRow label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-weight:800;
+  color:var(--muted);
+}
+.templateLoadRow select{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  font-size:16px;
+}
+.notifySectionList{
+  display:grid;
+  gap:8px;
+  margin:14px 0;
+}
+.notifyCheck{
+  background:#f8f2df;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+}
+.emptyCell{font-size:8px;}
+@media(max-width:760px){
+  .scheduleActions{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .templateLoadRow{grid-template-columns:1fr;}
+  .compactShift{font-size:7px !important;padding:2px 3px !important;}
+  .compactShift small{font-size:6px !important;max-height:12px;}
+}

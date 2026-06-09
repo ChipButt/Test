@@ -15,118 +15,26 @@
   font-size:12px !important;
   text-align:center !important;
 }
-.compactDayCell{
-  gap:2px !important;
-}
-.compactShift{
-  display:grid !important;
-  grid-template-columns:1fr auto !important;
-  column-gap:3px !important;
-  row-gap:1px !important;
-  align-items:center !important;
-  padding:3px 4px !important;
-  margin-bottom:2px !important;
-  border-radius:7px !important;
-  border-left:3px solid var(--accent) !important;
-  box-shadow:none !important;
-  font-size:8px !important;
-  line-height:1.05 !important;
-  min-height:0 !important;
-}
-.compactShift .compactName{
-  font-weight:900;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.compactShift .compactTime{
-  font-weight:900;
-  white-space:nowrap;
-}
-.compactShift small{
-  grid-column:1/-1;
-  font-size:7px !important;
-  line-height:1.05 !important;
-  max-height:15px;
-  overflow:hidden;
-}
-.compactShift.planned{
-  background:#d9d9d9 !important;
-  color:#111 !important;
-  border-left-color:#8f8f8f !important;
-}
-.compactShift.published{
-  background:var(--accent) !important;
-  color:#111 !important;
-  border-left-color:#111 !important;
-}
-.compactShift.unassigned{
-  background:#eee !important;
-  color:#7a1e1e !important;
-  border-left-color:#9f2f24 !important;
-}
-.scheduleAdminTools{
-  margin-top:14px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-}
+.compactDayCell{gap:2px !important;}
+.compactShift{display:grid !important;grid-template-columns:1fr auto !important;column-gap:3px !important;row-gap:1px !important;align-items:center !important;padding:3px 4px !important;margin-bottom:2px !important;border-radius:7px !important;border-left:3px solid var(--accent) !important;box-shadow:none !important;font-size:8px !important;line-height:1.05 !important;min-height:0 !important;}
+.compactShift .compactName{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.compactShift .compactTime{font-weight:900;white-space:nowrap;}
+.compactShift small{grid-column:1/-1;font-size:7px !important;line-height:1.05 !important;max-height:15px;overflow:hidden;}
+.compactShift.planned{background:#d9d9d9 !important;color:#111 !important;border-left-color:#8f8f8f !important;}
+.compactShift.published{background:var(--accent) !important;color:#111 !important;border-left-color:#111 !important;}
+.compactShift.unassigned{background:#eee !important;color:#7a1e1e !important;border-left-color:#9f2f24 !important;}
+.scheduleAdminTools{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;}
 .scheduleAdminTools h2{margin:0 0 8px;}
-.scheduleActions{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:8px;
-  margin-top:10px;
-}
-.scheduleActions button{
-  padding:10px 8px;
-  font-size:13px;
-}
-.templateLoadRow{
-  margin-top:12px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:8px;
-  align-items:end;
-}
-.templateLoadRow label{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  font-weight:800;
-  color:var(--muted);
-}
-.templateLoadRow select{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:10px;
-  font-size:16px;
-}
-.notifySectionList{
-  display:grid;
-  gap:8px;
-  margin:14px 0;
-}
-.notifyCheck{
-  background:#f8f2df;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px;
-}
+.scheduleActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;}
+.scheduleActions button{padding:10px 8px;font-size:13px;}
+.templateLoadRow{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;}
+.templateLoadRow label{display:flex;flex-direction:column;gap:6px;font-weight:800;color:var(--muted);}
+.templateLoadRow select{border:1px solid var(--line);border-radius:14px;padding:10px;font-size:16px;}
+.notifySectionList{display:grid;gap:8px;margin:14px 0;}
+.notifyCheck{background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:10px;}
 .emptyCell{font-size:8px;}
 .breakSummary{font-size:13px;margin-top:8px;}
-.profileCostCard{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:6px;
-  align-items:center;
-  margin:12px 0;
-  padding:12px;
-  background:#111;
-  color:var(--accent);
-  border-radius:16px;
-}
+.profileCostCard{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;margin:12px 0;padding:12px;background:#111;color:var(--accent);border-radius:16px;}
 .profileCostCard small{grid-column:1/-1;color:#f3e6c7;}
 .costReportPanel{margin-top:14px;}
 .costRange{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -135,52 +43,28 @@
 .costUserList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0;max-height:260px;overflow:auto;}
 .costUserList .checkLabel{background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:8px;font-size:13px;}
 .overContractUser{outline:3px solid #b83737 !important;background:#fff0ef !important;}
+.permissionSetsHome{display:grid;gap:14px;}
+.permissionSetList{display:grid;gap:10px;}
+.permissionSetListItem{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;width:100%;text-align:left;background:#fffdf8 !important;color:#111 !important;border:1px solid var(--line);border-radius:16px;padding:14px !important;}
+.permissionSetListItem strong{display:block;font-size:20px;}
+.permissionSetListItem small{display:block;color:var(--muted);margin-top:4px;font-size:13px;}
+.permissionSetListItem em{display:block;color:#7f621f;font-style:normal;margin-top:6px;font-size:12px;font-weight:800;}
+.permissionSetListItem b{font-size:28px;color:var(--accent);}
+.permissionEditorBubble{background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:14px;}
+.permissionEditorForm{display:grid;gap:12px;}
+.permissionEditorForm label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-weight:800;}
+.permissionEditorForm input,.permissionEditorForm textarea{width:100%;max-width:100%;min-width:0;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:16px;box-sizing:border-box;}
+.permissionBulkActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.permissionTickList{display:grid;gap:8px;}
+.permissionTick{display:flex !important;flex-direction:row !important;align-items:center;justify-content:space-between;gap:12px;background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:10px;color:#111 !important;font-weight:800;}
+.permissionTick input{width:auto !important;min-width:auto !important;}
+.sectionDeleteBtn{background:transparent !important;color:#111 !important;border:0 !important;border-radius:0 !important;padding:6px !important;font-size:18px !important;line-height:1 !important;box-shadow:none !important;}
+.sectionDeleteBtn:hover{color:#9f2f24 !important;}
 /* Hard mobile form containment fix for iOS native input/select bubbles */
-.panel,.workCard,.shiftModal,.profileLinks,.scheduleAdminTools{
-  max-width:100% !important;
-  overflow:hidden !important;
-}
-.formGrid,
-.formGrid label,
-.rowForm,
-.rowForm label,
-.costRange,
-.templateLoadRow,
-.editProfileForm,
-.shiftModal form{
-  min-width:0 !important;
-  max-width:100% !important;
-}
-.formGrid input,
-.formGrid select,
-.formGrid textarea,
-.rowForm input,
-.rowForm select,
-.rowForm textarea,
-.costRange input,
-.templateLoadRow select,
-.shiftModal input,
-.shiftModal select,
-.shiftModal textarea,
-.editProfileForm input,
-.editProfileForm select,
-.editProfileForm textarea{
-  width:100% !important;
-  max-width:100% !important;
-  min-width:0 !important;
-  box-sizing:border-box !important;
-  display:block !important;
-}
-input[type="date"],
-input[type="time"],
-input[type="number"],
-input[type="email"],
-input[type="tel"],
-select,
-textarea{
-  -webkit-appearance:none;
-  appearance:none;
-}
+.panel,.workCard,.shiftModal,.profileLinks,.scheduleAdminTools{max-width:100% !important;overflow:hidden !important;}
+.formGrid,.formGrid label,.rowForm,.rowForm label,.costRange,.templateLoadRow,.editProfileForm,.shiftModal form{min-width:0 !important;max-width:100% !important;}
+.formGrid input,.formGrid select,.formGrid textarea,.rowForm input,.rowForm select,.rowForm textarea,.costRange input,.templateLoadRow select,.shiftModal input,.shiftModal select,.shiftModal textarea,.editProfileForm input,.editProfileForm select,.editProfileForm textarea{width:100% !important;max-width:100% !important;min-width:0 !important;box-sizing:border-box !important;display:block !important;}
+input[type="date"],input[type="time"],input[type="number"],input[type="email"],input[type="tel"],select,textarea{-webkit-appearance:none;appearance:none;}
 @media(max-width:760px){
   .adminTabs{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:3px !important;}
   .adminTab{font-size:10px !important;padding:7px 2px !important;}
@@ -190,29 +74,9 @@ textarea{
   .compactShift small{font-size:6px !important;max-height:12px;}
   .costRange,.costUserList{grid-template-columns:1fr;}
   main{padding-left:10px !important;padding-right:10px !important;overflow-x:hidden !important;}
-  .panel,.workCard{
-    padding:14px !important;
-    border-radius:18px !important;
-  }
-  .formGrid{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) !important;
-    gap:10px !important;
-    width:100% !important;
-  }
-  .formGrid input,
-  .formGrid select,
-  .formGrid textarea,
-  .shiftModal input,
-  .shiftModal select,
-  .shiftModal textarea{
-    padding:10px 12px !important;
-    border-radius:14px !important;
-    font-size:16px !important;
-  }
-  .shiftModal{
-    width:calc(100vw - 20px) !important;
-    max-width:calc(100vw - 20px) !important;
-    padding:16px !important;
-  }
+  .panel,.workCard{padding:14px !important;border-radius:18px !important;}
+  .formGrid{display:grid !important;grid-template-columns:minmax(0,1fr) !important;gap:10px !important;width:100% !important;}
+  .formGrid input,.formGrid select,.formGrid textarea,.shiftModal input,.shiftModal select,.shiftModal textarea{padding:10px 12px !important;border-radius:14px !important;font-size:16px !important;}
+  .shiftModal{width:calc(100vw - 20px) !important;max-width:calc(100vw - 20px) !important;padding:16px !important;}
+  .permissionBulkActions{grid-template-columns:1fr;}
 }

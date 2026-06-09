@@ -43,21 +43,26 @@
 .costUserList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0;max-height:260px;overflow:auto;}
 .costUserList .checkLabel{background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:8px;font-size:13px;}
 .overContractUser{outline:3px solid #b83737 !important;background:#fff0ef !important;}
-.permissionSetsHome{display:grid;gap:14px;}
-.permissionSetList{display:grid;gap:10px;}
-.permissionSetListItem{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;width:100%;text-align:left;background:#fffdf8 !important;color:#111 !important;border:1px solid var(--line);border-radius:16px;padding:14px !important;}
-.permissionSetListItem strong{display:block;font-size:20px;}
-.permissionSetListItem small{display:block;color:var(--muted);margin-top:4px;font-size:13px;}
-.permissionSetListItem em{display:block;color:#7f621f;font-style:normal;margin-top:6px;font-size:12px;font-weight:800;}
-.permissionSetListItem b{font-size:28px;color:var(--accent);}
-.permissionEditorBubble{background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:14px;}
-.permissionEditorForm{display:grid;gap:12px;}
-.permissionEditorForm label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-weight:800;}
+.permissionSetsHome{display:grid;gap:14px;align-items:stretch;}
+.permissionSetsHome .sectionHeader{display:grid !important;grid-template-columns:1fr;gap:10px;align-items:start !important;}
+.permissionSetsHome .sectionHeader button{width:100%;min-height:48px;border-radius:14px;}
+.permissionSetList{display:grid;grid-template-columns:1fr;gap:10px;width:100%;align-items:stretch;}
+.permissionSetListItem{display:grid !important;grid-template-columns:minmax(0,1fr) 28px !important;align-items:center !important;gap:12px !important;width:100% !important;min-height:92px !important;text-align:left !important;background:#fffdf8 !important;color:#111 !important;border:1px solid var(--line) !important;border-radius:16px !important;padding:14px !important;box-shadow:none !important;}
+.permissionSetListItem span{display:block;min-width:0;}
+.permissionSetListItem strong{display:block;font-size:20px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.permissionSetListItem small{display:block;color:var(--muted);margin-top:5px;font-size:13px;line-height:1.2;min-height:32px;overflow:hidden;}
+.permissionSetListItem em{display:block;color:#7f621f;font-style:normal;margin-top:6px;font-size:12px;font-weight:800;line-height:1.1;}
+.permissionSetListItem b{font-size:28px;color:var(--accent);text-align:right;}
+.permissionEditorBubble{background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:14px;max-width:100%;overflow:hidden;}
+.permissionEditorForm{display:grid;gap:12px;max-width:100%;}
+.permissionEditorForm label:not(.permissionTick){display:flex;flex-direction:column;gap:6px;color:var(--muted);font-weight:800;}
 .permissionEditorForm input,.permissionEditorForm textarea{width:100%;max-width:100%;min-width:0;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:16px;box-sizing:border-box;}
 .permissionBulkActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.permissionTickList{display:grid;gap:8px;}
-.permissionTick{display:flex !important;flex-direction:row !important;align-items:center;justify-content:space-between;gap:12px;background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:10px;color:#111 !important;font-weight:800;}
-.permissionTick input{width:auto !important;min-width:auto !important;}
+.permissionBulkActions button{min-height:44px;}
+.permissionTickList{display:grid;grid-template-columns:1fr;gap:6px;width:100%;}
+.permissionTick{display:grid !important;grid-template-columns:minmax(0,1fr) 34px !important;align-items:center !important;justify-content:stretch !important;gap:12px !important;width:100% !important;min-height:44px !important;background:#f8f2df;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:#111 !important;font-weight:800;box-sizing:border-box;}
+.permissionTick span{display:block;text-align:left;line-height:1.2;min-width:0;}
+.permissionTick input{justify-self:end !important;align-self:center !important;width:22px !important;height:22px !important;min-width:22px !important;max-width:22px !important;margin:0 !important;box-sizing:border-box !important;}
 .sectionDeleteBtn{background:transparent !important;color:#111 !important;border:0 !important;border-radius:0 !important;padding:6px !important;font-size:18px !important;line-height:1 !important;box-shadow:none !important;}
 .sectionDeleteBtn:hover{color:#9f2f24 !important;}
 /* Hard mobile form containment fix for iOS native input/select bubbles */
@@ -79,4 +84,9 @@ input[type="date"],input[type="time"],input[type="number"],input[type="email"],i
   .formGrid input,.formGrid select,.formGrid textarea,.shiftModal input,.shiftModal select,.shiftModal textarea{padding:10px 12px !important;border-radius:14px !important;font-size:16px !important;}
   .shiftModal{width:calc(100vw - 20px) !important;max-width:calc(100vw - 20px) !important;padding:16px !important;}
   .permissionBulkActions{grid-template-columns:1fr;}
+  .permissionSetListItem{min-height:88px !important;padding:12px !important;}
+  .permissionSetListItem strong{font-size:18px;}
+  .permissionSetListItem small{font-size:12px;min-height:30px;}
+  .permissionTick{grid-template-columns:minmax(0,1fr) 30px !important;min-height:42px !important;padding:9px 10px !important;font-size:13px !important;}
+  .permissionTick input{width:20px !important;height:20px !important;min-width:20px !important;max-width:20px !important;}
 }

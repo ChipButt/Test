@@ -5,8 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#17102f" />
     <title>Mess Quest</title>
-    <script type="module" crossorigin src="./assets/index-CpEXKOCq.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-kCJl65YT.css">
+    <script>
+      (function () {
+        function fixAssetPath(value) {
+          if (typeof value !== "string") return value;
+          return value
+            .replace(/(^|[\s"'(])(?:\.\/)?assets\/generated\//g, "$1generated/")
+            .replace(/(^|[\s"'(])(?:\.\/)?assets\/backgrounds\//g, "$1backgrounds/");
+        }
+
+        var originalSetAttribute = Element.prototype.setAttribute;
+        Element.prototype.setAttribute = function (name, value) {
+          if (name === "src" || name === "href" || name === "style") {
+            value = fixAssetPath(value);
+          }
+          return originalSetAttribute.call(this, name, value);
+        };
+
+        var imageSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, "src");
+        if (imageSrc && imageSrc.set) {
+          Object.defineProperty(HTMLImageElement.prototype, "src", {
+            get: imageSrc.get,
+            set: function (value) {
+              imageSrc.set.call(this, fixAssetPath(value));
+            },
+            configurable: true,
+            enumerable: imageSrc.enumerable
+          });
+        }
+
+        function fixInlineAssets(root) {
+          if (!root || !root.querySelectorAll) return;
+          root.querySelectorAll("img[src*='assets/'], [style*='assets/']").forEach(function (el) {
+            if (el.getAttribute("src")) {
+              originalSetAttribute.call(el, "src", fixAssetPath(el.getAttribute("src")));
+            }
+            if (el.getAttribute("style")) {
+              originalSetAttribute.call(el, "style", fixAssetPath(el.getAttribute("style")));
+            }
+          });
+        }
+
+        window.addEventListener("DOMContentLoaded", function () {
+          fixInlineAssets(document);
+          new MutationObserver(function (records) {
+            records.forEach(function (record) {
+              if (record.type === "attributes") {
+                fixInlineAssets(document);
+              }
+              record.addedNodes.forEach(function (node) {
+                if (node.nodeType === 1) {
+                  fixInlineAssets(node);
+                }
+              });
+            });
+          }).observe(document.documentElement, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["src", "style"]
+          });
+        });
+      })();
+    </script>
+    <script type="module" crossorigin src="./index-CpEXKOCq.js"></script>
+    <link rel="stylesheet" crossorigin href="./index-kCJl65YT.css">
   </head>
   <body>
     <div id="root"></div>

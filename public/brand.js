@@ -1,0 +1,1 @@
+export const BRAND={name:"The Good Cup",tagline:"Good coffee. Great rewards.",logo:"/logo.svg",primary:"#173e35",accent:"#cfae78",background:"#f5f1e9",font:"'DM Sans', system-ui, sans-serif",rewardName:"A coffee on us",stampsRequired:8,terms:"One stamp per qualifying purchase. Rewards have no cash value. Staff approval required."};

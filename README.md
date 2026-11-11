@@ -1,26 +1,30 @@
-# Chip In Loyalty — reusable digital stamp card
+# Chip In Loyalty
 
-A branded customer loyalty web app with Cloudflare Workers + D1. Each company gets its own deployment and D1 database. No required customer accounts or third-party paid QR service for basic operation.
+A reusable loyalty card application built for Cloudflare Workers and D1.
 
-## Setup for a new business
-1. Duplicate this repository (GitHub template or copy).
-2. Edit `brand.js` for name, colours, reward and font. Replace `public/logo.svg` with the company's logo, and change the `logo` path if necessary.
-3. Set `STAMPS_REQUIRED` in the Cloudflare Worker environment to the same integer as `brand.js` (default 8).
-4. Create a Cloudflare D1 database named for the business, copy its database ID into `wrangler.jsonc`.
-5. Run `npx wrangler d1 execute loyalty --remote --file=./schema.sql` from the project folder (or execute the schema in the D1 dashboard).
-6. Set `STAFF_KEY` as a **secret** in Cloudflare (never commit it): `npx wrangler secret put STAFF_KEY`.
-7. Deploy via `npx wrangler deploy`. Connect a custom domain in Cloudflare if required.
-8. Open the deployed site. Staff dashboard is at `/?staff`. Test join → stamp → reward → redeem on a test card.
+## Status
+The source code is not a live service until a D1 database is created, the schema is applied, a staff secret is configured, and a Cloudflare Worker is deployed. GitHub Pages cannot run the backend.
 
-## What is included
-- Responsive branded customer card, PWA install support, progress display and QR card link
-- Staff key protected stamping, redemption, live aggregate dashboard
-- D1 persistent data, stamp history, customer identifiers generated without asking for names/emails
-- Brand configuration in one file; no customer data shared between deployments
-- No stock photos or licensed external artwork needed; included logo is original SVG
+## Brand a new installation
+1. Copy this repository into a new repository for the business.
+2. Edit `public/brand.js` to set name, tagline, colour palette, reward description and required stamps.
+3. Replace `public/logo.svg` with the business logo. Update the logo path in `public/brand.js` if using PNG/WebP.
+4. Use a commercially licensed font. The current Google Font is DM Sans (SIL Open Font License).
+5. Create a new D1 database and set its ID in `wrangler.jsonc`.
+6. Apply `schema.sql` to the D1 database.
+7. Configure Cloudflare secret `STAFF_KEY` (at least 16 characters), and `STAMPS_REQUIRED` to match the brand setting.
+8. Deploy the Worker with Cloudflare's Wrangler or a CI workflow. Verify the Worker health endpoint and complete a join, stamp and redeem test.
 
-## Important before selling
-This is an initial functional build, **not a production security certification**. The shared staff key should be replaced with named staff accounts, rate limiting, proper session management and audit controls before real customer use. The current QR uses the external qrserver.com image endpoint, which receives the card token: replace it with a locally generated QR library before production. Protect against card-link sharing, add deletion/retention controls, accessible privacy notice and a backup/restore process. Verify deployment, concurrent stamping, payment/contract terms and Cloudflare quotas. Do not represent it as independently audited.
+## Operations
+Each business must use its own D1 database and staff secret. The staff area is accessed with `/?staff`. Cards are bearer links; anyone with a link can display that card. Customers should be informed of this. Use Cloudflare rate limits and monitor for abuse. Database backups, deletion policies and recovery procedures must be configured before accepting real customers.
 
-## Licensing
-Original application source is provided for Chip In's own reuse. Fonts loaded from Google Fonts require review of their OFL terms if bundled locally. No third-party photographs are included.
+## Security and production
+This is not independently security audited. The current staff key is shared rather than a per-staff identity. This is a deployment blocker for businesses requiring per-user accountability. No automatic payments, GDPR retention workflow or production backup/restore verification is included. Do not sell this as a fully managed production system without completing those requirements.
+
+## Architecture
+- `public/`: customer and staff user interface
+- `src/worker.js`: Cloudflare Worker API
+- `schema.sql`: D1 schema
+- `wrangler.jsonc`: deployment configuration
+
+No third-party stock artwork is included. The original sample logo is an SVG illustration.
